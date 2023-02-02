@@ -1,18 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import './contact.css'
 
 const Contact = () => {
 
     const form = useRef();
+    const [toggleState, setToggleState] = useState(0);
+    const [emailField, setEmailField] = useState();
 
     const sendEmail = (e) => {
         e.preventDefault();
 
-        emailjs.sendForm('service_hdslhlf', 'template_g9s4xj1', form.current, 'c_0KodbYt8PkvvlWa')
-        e.target.reset()
+        if(emailField === undefined) {
+            setToggleState(2);
+        } else {
+            emailjs.sendForm('service_hdslhlf', 'template_g9s4xj1', form.current, 'c_0KodbYt8PkvvlWa')
+            setToggleState(1);
+            e.target.reset()
+        }
     };
-
 
   return (
     <section className="contact section" id="contact">
@@ -31,7 +37,7 @@ const Contact = () => {
                         <h3 className="contact__card-title">E-mail</h3>
                         <span className="contact__card-data">richardzumk@gmail.com</span>
 
-                        <a href="" className="contact__button button--flex">Write me <i className="bx bx-right-arrow-alt contact__button-icon"></i></a>
+                        <a href="mailto:richardzumk@gmail.com" className="contact__button button--flex">Write me <i className="bx bx-right-arrow-alt contact__button-icon"></i></a>
                     </div>
 
                     <div className="contact__card">
@@ -40,14 +46,14 @@ const Contact = () => {
                         <h3 className="contact__card-title">Whatsapp</h3>
                         <span className="contact__card-data">+55 (19) 99866-8992</span>
 
-                        <a href="https://api.whatsapp.com/send?phone=62214408789&text=Hello, more information!" className="contact__button button--flex">Write me <i className="bx bx-right-arrow-alt contact__button-icon"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=5519998668992&text=Hello,%20I%20saw%20your%20portfolio%20and%20want%20to%20talk%20to%20you!" className="contact__button button--flex">Write me <i className="bx bx-right-arrow-alt contact__button-icon"></i></a>
                     </div>
 
                     <div className="contact__card">
                         <i className="bx bxl-messenger contact__card-icon"></i>
 
-                        <h3 className="contact__card-title">Teste</h3>
-                        <span className="contact__card-data">teste133</span>
+                        <h3 className="contact__card-title">Messenger</h3>
+                        <span className="contact__card-data">richardzkr</span>
 
                         <a href="https://m.me/richardzkr" className="contact__button button--flex">Write me <i className="bx bx-right-arrow-alt contact__button-icon"></i></a>
                     </div>
@@ -68,7 +74,9 @@ const Contact = () => {
 
                     <div className="contact__form-line">
                         <label className="contact__form-tag">E-mail</label>
-                        <input type="text" name="email" className='contact__form-input' placeholder='Insert your e-mail'/>
+                        <input type="text" id="email" name="email" className='contact__form-input' placeholder='Insert your e-mail'
+                        onChange={e => setEmailField(e.target.value)}
+                        />
                     </div>
 
                     <div className="contact__form-line contact__form-area">
@@ -79,7 +87,7 @@ const Contact = () => {
                     <button className="button button--flex">
                     Send Message
                     <svg
-                    class="button__icon"
+                    className="button__icon"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -96,6 +104,33 @@ const Contact = () => {
                     ></path>
                     </svg>
                     </button>
+
+                    <div className={toggleState === 1 ? "contact__modal active-modal" : "contact__modal"}>
+                        <div className="contact__modal-content">
+                            <i className="uil uil-times contact__modal-close" onClick={() => setToggleState(0)}></i>
+
+                            <i className='bx bx-mail-send contact__modal-bigicon'></i>
+
+                            <h3 className="contact__modal-title">E-mail Sent!</h3>
+                            <p className="contact__modal-description">
+                            Thank you for sending me a message! I'll answer as soon as I can!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={toggleState === 2 ? "contact__modal active-modal" : "contact__modal"}>
+                        <div className="contact__modal-content">
+                            <i className="uil uil-times contact__modal-close" onClick={() => setToggleState(0)}></i>
+
+                            <i className='bx bx-error contact__modal-bigicon'></i>
+
+                            <h3 className="contact__modal-title">Message not delivered!</h3>
+                            <p className="contact__modal-description">
+                            You need to fill your best e-mail to send the message.
+                            </p>
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>
